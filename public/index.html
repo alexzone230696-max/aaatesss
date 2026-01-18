@@ -4,30 +4,12 @@
   <meta charset="UTF-8">
   <title>Загрузка...</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Шрифт -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
-
-  <!-- Kinobox CSS -->
   <link rel="stylesheet" href="https://fbphdplay.top/kinobox.css">
-
   <style>
-    body {
-      margin: 0;
-      background: #000;
-      color: #fff;
-      font-family: 'Montserrat', sans-serif;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 10px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-weight: 400;
-    }
+    body { margin: 0; background: #000; color: #fff; font-family: 'Montserrat', sans-serif; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 10px; }
+    h1 { text-align: center; margin-bottom: 20px; font-weight: 400; }
   </style>
 </head>
 <body>
@@ -38,10 +20,9 @@
 
   <script src="https://fbphdplay.top/kinobox.js"></script>
   <script>
-    // Получаем путь: /film/12345 или /series/67890
     const pathParts = location.pathname.split('/').filter(Boolean);
-    const type = pathParts[0]; // film или series
-    const kpId = pathParts[1]; // числовой ID
+    const type = pathParts[0];
+    const kpId = pathParts[1];
 
     const titleEl = document.getElementById('title');
     const playerEl = '#player';
@@ -51,25 +32,30 @@
       titleEl.style.color = 'red';
       document.title = 'Фильм/сериал не найден';
     } else {
-      kinobox(playerEl, {
-        baseUrl: 'https://fbphdplay.top/',
-        search: { kinopoisk: kpId },
-        onReady: function(data) {
-          // Берём только название и год
-          const name = (data.kinopoisk && (data.kinopoisk.nameRu || data.kinopoisk.nameOriginal)) || 'Фильм/сериал';
-          const year = (data.kinopoisk && data.kinopoisk.year) || '';
+      // 1. Сначала запрос к KinopoiskUnoficial API
+      fetch(`https://api.kinopoiskapiunofficial.tech/api/v2.2/films/${kpId}`, {
+        headers: { 'X‑API‑KEY': 'a5b27826-b5b3-4e1c-a7d6-66facbc3743c' }
+      })
+      .then(res => res.json())
+      .then(movie => {
+        // Берём название и год
+        const name = movie.nameRu || movie.nameOriginal || 'Фильм/сериал';
+        const year = movie.year || '';
+        const fullTitle = year ? `${name} (${year})` : name;
 
-          const fullTitle = year ? `${name} (${year})` : name;
+        titleEl.textContent = fullTitle;
+        document.title = fullTitle;
 
-          // Обновляем H1 и заголовок вкладки
-          titleEl.textContent = fullTitle;
-          document.title = fullTitle;
-        },
-        onError: function() {
-          titleEl.textContent = 'Не удалось загрузить фильм/сериал';
-          titleEl.style.color = 'red';
-          document.title = 'Ошибка';
-        }
+        // 2. Инициализируем Kinobox после получения названия
+        kinobox(playerEl, {
+          baseUrl: 'https://fbphdplay.top/',
+          search: { kinopoisk: kpId }
+        });
+      })
+      .catch(() => {
+        titleEl.textContent = 'Информация о фильме недоступна';
+        titleEl.style.color = 'red';
+        document.title = 'Ошибка';
       });
     }
   </script>
