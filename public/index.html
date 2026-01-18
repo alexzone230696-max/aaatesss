@@ -163,7 +163,7 @@
     titleEl.textContent = 'Фильм/сериал не найден';
     titleEl.style.color = 'red';
   } else {
-    titleEl.textContent = type === 'film' ? 'Фильм' : 'Сериал';
+    titleEl.textContent = type === 'film' ? '' : '';
     // ===== Инициализация Kinobox =====
     kinobox(playerEl, {
       baseUrl: 'https://fbphdplay.top/',
