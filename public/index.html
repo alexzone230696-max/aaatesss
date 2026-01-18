@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Просмотр фильма</title>
+  <title>Просмотр фильма / сериала</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Шрифт -->
@@ -23,11 +23,16 @@
       margin: 0 auto;
       padding: 10px;
     }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
+  <h1 id="title">Загрузка...</h1>
   <div class="kinobox" id="player"></div>
 </div>
 
@@ -35,28 +40,33 @@
 <script src="https://fbphdplay.top/kinobox.js"></script>
 
 <script>
-  // ======== Получаем ID фильма из URL ========
-  // Пример URL: https://your-site.com/film/1234567
-  const pathParts = location.pathname.split('/'); // ["", "film", "1234567"]
+  // ===== Получаем тип и ID из URL =====
+  const pathParts = location.pathname.split('/').filter(Boolean); // ["film", "1234567"] или ["series", "5610105"]
+  let type = null;
   let kpId = null;
 
-  if (pathParts[1] === 'film' && pathParts[2]) {
-    kpId = pathParts[2];
+  if(pathParts.length >= 2){
+    type = pathParts[0];   // "film" или "series"
+    kpId = pathParts[1];   // ID
   }
 
-  if (!kpId) {
-    document.body.innerHTML = '<h1 style="color:red; text-align:center;">Фильм не найден</h1>';
+  const titleEl = document.getElementById('title');
+  const playerEl = '#player';
+
+  if(!kpId || !type || !['film','series'].includes(type)){
+    titleEl.textContent = 'Фильм/сериал не найден';
+    titleEl.style.color = 'red';
   } else {
-    // ======== Инициализация Kinobox ========
-    kinobox('#player', {
+    titleEl.textContent = type === 'film' ? 'Фильм' : 'Сериал';
+    // ===== Инициализация Kinobox =====
+    kinobox(playerEl, {
       baseUrl: 'https://fbphdplay.top/',
       search: {
         kinopoisk: kpId
       }
     });
+    console.log('Тип:', type, 'ID:', kpId);
   }
-
-  console.log('Kinopoisk ID:', kpId);
 </script>
 
 </body>
