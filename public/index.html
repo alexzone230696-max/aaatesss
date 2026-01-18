@@ -93,5 +93,26 @@
   }
 </script>
 
+<script>
+  // Показываем подписку через 3 секунды на мобильных устройствах
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth <= 768) { // мобильные
+      setTimeout(function() {
+        const topAdMb = document.getElementById('TopAdMb');
+        if (topAdMb) topAdMb.style.display = 'block';
+      }, 3000);
+    }
+
+    // Закрытие блока по кнопке X
+    const closeBtn = document.getElementById('toCloseTopAdMb');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function() {
+        const topAdMb = document.getElementById('TopAdMb');
+        if (topAdMb) topAdMb.style.display = 'none';
+      });
+    }
+  });
+</script>
+
 </body>
 </html>
