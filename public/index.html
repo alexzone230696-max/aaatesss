@@ -6,19 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Шрифт -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
 
   <!-- Kinobox CSS -->
   <link rel="stylesheet" href="https://fbphdplay.top/kinobox.css">
-
-
-
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&amp;display=swap" rel="stylesheet">  
-  <link rel="stylesheet" href="https://fbphdplay.top/kinobox/kinobox.css">  
-   
-
-
-
 
   <style>
     body {
@@ -37,105 +28,41 @@
       margin-bottom: 20px;
     }
 
-.subscribe-notice {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 300px;
-  background: linear-gradient(135deg, #0088cc, #00c6ff);
-  color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  font-family: 'Montserrat', sans-serif;
-  z-index: 9999;
-  display: none; /* Скрыт по умолчанию */
-  animation: fadeInUp 0.5s ease forwards;
-}
-
-/* Анимация появления */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translate(-50%, 50px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
-
-/* Контент блока */
-.subscribe-content {
-  padding: 15px;
-  text-align: center;
-}
-
-.subscribe-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.subscribe-header button {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.subscribe-body img {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 10px;
-}
-
-.subscribe-body p {
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.subscribe-btn {
-  display: inline-block;
-  background: #fff;
-  color: #0088cc;
-  text-decoration: none;
-  padding: 8px 20px;
-  border-radius: 20px;
-  font-weight: 600;
-  transition: 0.3s;
-}
-
-.subscribe-btn:hover {
-  background: #e0f7ff;
-  color: #005577;
-}
-
+    .subscribe-notice {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      background: linear-gradient(135deg, #0088cc, #00c6ff);
+      color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      font-family: 'Montserrat', sans-serif;
+      z-index: 9999;
+      display: none;
+      animation: fadeInUp 0.5s ease forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translate(-50%, 50px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+    .subscribe-content { padding: 15px; text-align: center; }
+    .subscribe-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; margin-bottom: 10px; }
+    .subscribe-header button { background: transparent; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+    .subscribe-body img { width: 50px; height: 50px; margin-bottom: 10px; }
+    .subscribe-body p { font-size: 14px; margin-bottom: 10px; }
+    .subscribe-btn { display: inline-block; background: #fff; color: #0088cc; text-decoration: none; padding: 8px 20px; border-radius: 20px; font-weight: 600; transition: 0.3s; }
+    .subscribe-btn:hover { background: #e0f7ff; color: #005577; }
   </style>
 </head>
 <body>
+
 <!-- Верхний рекламный блок (Desktop) -->
 <div class="topAdPad">
   <div id="movie_video"></div>
   <script type="text/javascript" src="https://vak345.com/s.js?v=03208824bea369b060dba1f2083d6a4c" async></script>
 </div>
-
-<!-- Подписка на канал (Мобильное уведомление) 
-<div id="TopAdMb" class="subscribe-notice">
-  <div class="subscribe-content">
-    <div class="subscribe-header">
-      <span>Подпишись на наш канал</span>
-      <button id="toCloseTopAdMb">&times;</button>
-    </div>
-    <div class="subscribe-body">
-      <img src="https://flcksbr.top/imgs/tglogomin.jpg" alt="Telegram Logo">
-      <p>Будь на связи! Кликни, чтобы подписаться на наш Telegram канал.</p>
-      <a href="https://t.me/flicksbar3" target="_blank" class="subscribe-btn">Подписаться</a>
-    </div>
-  </div>
-</div>-->
-
-<!-- Прочие рекламные скрипты -->
-<script type="text/javascript" src="https://myroledance.com/services/?id=174265"></script>
-<script src="https://fbphdplay.top/kinobox.js"></script>
-
 
 <div class="container">
   <h1 id="title">Загрузка...</h1>
@@ -162,13 +89,22 @@
   if(!kpId || !type || !['film','series'].includes(type)){
     titleEl.textContent = 'Фильм/сериал не найден';
     titleEl.style.color = 'red';
+    document.title = 'Фильм/сериал не найден';
   } else {
-    titleEl.textContent = type === 'film' ? '' : '';
-    // ===== Инициализация Kinobox =====
     kinobox(playerEl, {
       baseUrl: 'https://fbphdplay.top/',
-      search: {
-        kinopoisk: kpId
+      search: { kinopoisk: kpId },
+      onReady: function(data) {
+        // Получаем название и год фильма/сериала
+        const name = data.title || data.original_title || 'Фильм/сериал';
+        const year = data.year || '';
+        const fullTitle = year ? `${name} (${year})` : name;
+
+        // Обновляем заголовок вкладки
+        document.title = fullTitle;
+
+        // Обновляем H1 на странице
+        titleEl.textContent = fullTitle;
       }
     });
     console.log('Тип:', type, 'ID:', kpId);
@@ -178,14 +114,13 @@
 <script>
   // Показываем подписку через 3 секунды на мобильных устройствах
   document.addEventListener('DOMContentLoaded', function() {
-    if (window.innerWidth <= 768) { // мобильные
+    if (window.innerWidth <= 768) {
       setTimeout(function() {
         const topAdMb = document.getElementById('TopAdMb');
         if (topAdMb) topAdMb.style.display = 'block';
       }, 3000);
     }
 
-    // Закрытие блока по кнопке X
     const closeBtn = document.getElementById('toCloseTopAdMb');
     if (closeBtn) {
       closeBtn.addEventListener('click', function() {
