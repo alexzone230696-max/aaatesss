@@ -1,6 +1,8 @@
 {
   "rewrites": [
     { "source": "/film/:id", "destination": "/index.html" },
-    { "source": "/series/:id", "destination": "/index.html" }
+    { "source": "/film/:id/", "destination": "/index.html" },
+    { "source": "/series/:id", "destination": "/index.html" },
+    { "source": "/series/:id/", "destination": "/index.html" }
   ]
 }
