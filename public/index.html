@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Film Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    #filmCode { font-weight: bold; color: darkblue; }
+  </style>
+</head>
+<body>
+  <h1>Film Page</h1>
+  <p id="filmCode">Загрузка...</p>
+
+  <script>
+    // Разбираем путь: location.pathname = "/film/1234567"
+    const pathParts = location.pathname.split('/'); // ["", "film", "1234567"]
+    let filmCode = null;
+
+    if (pathParts[1] === 'film' && pathParts[2]) {
+      filmCode = pathParts[2];
+    }
+
+    document.getElementById('filmCode').textContent = filmCode
+      ? `Код фильма: ${filmCode}`
+      : 'Фильм не найден';
+
+    console.log('Film code:', filmCode);
+  </script>
+</body>
+</html>
