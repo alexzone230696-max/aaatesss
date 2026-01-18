@@ -2,15 +2,15 @@
 <html lang="ru">    
 <head>    
   <meta charset="UTF-8">    
-  <title>Смотреть фильм онлайн  бесплатно</title>    
+  <title>Смотреть фильм онлайн бесплатно</title>    
   <meta name="viewport" content="width=device-width, initial-scale=1">    
-    
+
   <!-- Шрифт -->    
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">    
-    
+
   <!-- Kinobox CSS -->    
   <link rel="stylesheet" href="https://fbphdplay.top/kinobox.css">    
-    
+
   <style>    
     body {    
       margin: 0;    
@@ -32,46 +32,51 @@
 </head>    
 <body>    
   <div class="container">    
-       
+    <h1 id="title">Загрузка...</h1> <!-- H1 для названия -->
     <div class="kinobox" id="player"></div>    
   </div>    
-    
+
   <script src="https://fbphdplay.top/kinobox.js"></script>    
   <script>    
-    // Получаем путь: /film/12345 или /series/67890    
     const pathParts = location.pathname.split('/').filter(Boolean);    
     const type = pathParts[0];    
     const kpId = pathParts[1];    
-    
+
     const titleEl = document.getElementById('title');    
     const playerEl = '#player';    
-    
+
     if(!kpId || !['film','series'].includes(type)){    
       titleEl.textContent = 'Фильм/сериал не найден';    
       titleEl.style.color = 'red';    
       document.title = 'Фильм/сериал не найден';    
     } else {    
-      kinobox(playerEl, {    
-        baseUrl: 'https://fbphdplay.top/',    
-        search: { kinopoisk: kpId },    
-        onReady: function(data) {    
-          // Название и год берём с Kinopoisk через Kinobox API    
-          const name = data.name || data.title || data.original_title || 'Фильм/сериал';    
-          const year = data.year || '';    
-          const fullTitle = year ? `${name} (${year})` : name;    
-    
-          // Обновляем заголовок вкладки    
-          document.title = fullTitle;    
-    
-          // Обновляем H1 на странице    
-          titleEl.textContent = fullTitle;    
-        },    
-        onError: function() {    
-          titleEl.textContent = 'Не удалось загрузить фильм/сериал';    
-          titleEl.style.color = 'red';    
-          document.title = 'Ошибка';    
-        }    
-      });    
+      const apiKey = "a5b27826-b5b3-4e1c-a7d6-66facbc3743c"; // твой ключ KinopoiskUnoficial
+
+      // 1. Сначала получаем название и год с KinopoiskUnoficial
+      fetch(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${kpId}`, {
+        headers: { "X-API-KEY": apiKey }
+      })
+      .then(res => res.json())
+      .then(data => {
+        const name = data.nameRu || data.nameEn || 'Фильм/сериал';
+        const year = data.year || '';
+        const fullTitle = year ? `${name} (${year})` : name;
+
+        // Обновляем H1 и заголовок вкладки
+        titleEl.textContent = fullTitle;
+        document.title = fullTitle;
+
+        // 2. Инициализируем плеер Kinobox
+        kinobox(playerEl, {
+          baseUrl: 'https://fbphdplay.top/',
+          search: { kinopoisk: kpId }
+        });
+      })
+      .catch(() => {
+        titleEl.textContent = 'Не удалось загрузить фильм/сериал';
+        titleEl.style.color = 'red';
+        document.title = 'Ошибка';
+      });
     }    
   </script>    
 </body>    
